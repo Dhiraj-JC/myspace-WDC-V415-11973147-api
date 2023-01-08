@@ -5,11 +5,13 @@ const customLoggerMiddleWare = require('./Middlewares/loggerMiddleware');
 const tokenValidatorMiddleware = require('./Middlewares/tokenValidatorMiddleware');
 const authenticateRouter = require('./Routes/authenticate');
 const ProductRouter = require('./Routes/product');
+const cors = require('cors');
 
 const app = express();
 dotenv.config();
 
 app.use(express.json());
+app.use(cors());
 app.use(customLoggerMiddleWare);
 app.use('/auth', authenticateRouter);
 app.use('/products', tokenValidatorMiddleware, ProductRouter);
