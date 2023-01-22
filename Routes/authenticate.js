@@ -2,9 +2,22 @@ const authenticateRouter = require('express').Router();
 const User = require('../Models/user');
 const { getHashedPassword, generateToken } = require('../Utilities');
 const bcrypt = require('bcrypt');
+const { validateEmail, validatePassword } = require('../Validators');
 
 authenticateRouter.post('/signup', async (req, res) => {
   let { userName, password } = req.body;
+
+  const emailValidation = validateEmail(userName);
+  if (emailValidation.isInvalid) {
+    res.status(400).json({ errorMessage: emailValidation.errorMessage });
+    return;
+  }
+
+  const passwordValidation = validatePassword(password);
+  if (passwordValidation.isInvalid) {
+    res.status(400).json({ errorMessage: passwordValidation.errorMessage });
+    return;
+  }
 
   password = await getHashedPassword(password);
 
@@ -21,6 +34,18 @@ authenticateRouter.post('/signup', async (req, res) => {
 
 authenticateRouter.post('/login', async (req, res) => {
   let { userName, password } = req.body;
+
+  const emailValidation = validateEmail(userName);
+  if (emailValidation.isInvalid) {
+    res.status(400).json({ errorMessage: emailValidation.errorMessage });
+    return;
+  }
+
+  const passwordValidation = validatePassword(password);
+  if (passwordValidation.isInvalid) {
+    res.status(400).json({ errorMessage: passwordValidation.errorMessage });
+    return;
+  }
 
   try {
     const user = await User.findOne({ userName: userName });
