@@ -5,6 +5,7 @@ const customLoggerMiddleWare = require('./Middlewares/loggerMiddleware');
 const tokenValidatorMiddleware = require('./Middlewares/tokenValidatorMiddleware');
 const authenticateRouter = require('./Routes/authenticate');
 const ProductRouter = require('./Routes/product');
+const BookRouter = require('./Routes/book');
 const cors = require('cors');
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(customLoggerMiddleWare);
 app.use('/auth', authenticateRouter);
 app.use('/products', tokenValidatorMiddleware, ProductRouter);
+app.use('/books', tokenValidatorMiddleware, BookRouter);
 
 connect(process.env.DB_CONNECTION_URL);
 
